@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Shrutika Chendake, QA Automation Engineer: Robot Framework, Selenium, Appium and Python test automation for web and iOS apps.">
+<meta property="og:title" content="Shrutika Chendake | QA Automation Engineer">
+<meta property="og:description" content="5+ years of test automation for web and iOS apps at Accenture. This page tests itself.">
+<meta name="theme-color" content="#14202b">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Shrutika Chendake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: a test report. Hero = live suite run, sections = test evidence, a floating runner that drives the page itself. */
+:root{
+  --paper:#eef2f5; --surface:#ffffff; --ink:#14202b; --muted:#566676; --line:#d3dce5;
+  --accent:#1f4f86; --accent-soft:#dfe8f3; --pass:#3a8429; --pass-soft:#e1f0da; --fail:#b8322a;
+  --con-bg:#15202b; --con-fg:#d6e0ea; --con-dim:#7f93a6; --con-line:#253545;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body:"Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0d131a; --surface:#141d27; --ink:#e3e9ef; --muted:#93a3b4; --line:#243241;
+  --accent:#8db5e8; --accent-soft:#1a2939; --pass:#8cc66f; --pass-soft:#1b2c19; --fail:#ef7d74;
+  --con-bg:#080d12; --con-fg:#d6e0ea; --con-dim:#71869a; --con-line:#1d2a37; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0d131a; --surface:#141d27; --ink:#e3e9ef; --muted:#93a3b4; --line:#243241;
+  --accent:#8db5e8; --accent-soft:#1a2939; --pass:#8cc66f; --pass-soft:#1b2c19; --fail:#ef7d74;
+  --con-bg:#080d12; --con-fg:#d6e0ea; --con-dim:#71869a; --con-line:#1d2a37; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;transition:background .3s,color .3s}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.1;margin:0}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+button{font:inherit;cursor:pointer}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;padding-block:12px}
+.brand{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);text-decoration:none;margin-right:auto}
+.brand span{color:var(--pass)}
+.nav{display:flex;gap:18px}
+.nav a{color:var(--muted);text-decoration:none;font-weight:600;font-size:15px}
+.nav a:hover{color:var(--ink)}
+.icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:14px;font-family:var(--mono)}
+@media (max-width:720px){.nav{display:none}}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;padding-block:64px 40px}
+.hero>*{min-width:0}
+.hero h1{font-size:clamp(44px,7vw,82px);font-weight:800;letter-spacing:-.02em;margin-top:14px}
+.hero .role{font-family:var(--mono);font-size:15px;color:var(--accent);margin-top:14px}
+.hero p.lede{font-size:20px;max-width:34ch;margin:20px 0 28px;color:var(--ink)}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:11px 20px;font-weight:700;font-size:15.5px;text-decoration:none;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.run{border-color:var(--pass);color:var(--pass)}
+.btn.run:hover,.btn:hover{transform:translateY(-1px)}
+.status-dot{width:9px;height:9px;border-radius:50%;background:var(--pass);box-shadow:0 0 0 4px var(--pass-soft)}
+.avail{display:flex;align-items:center;gap:10px}
+@media (max-width:860px){.hero{grid-template-columns:1fr;gap:32px;padding-block:40px 24px}}
+
+/* console */
+.console{background:var(--con-bg);color:var(--con-fg);border-radius:14px;font-family:var(--mono);font-size:13px;overflow:hidden;box-shadow:0 24px 50px -28px rgba(10,20,30,.55)}
+.con-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--con-line);color:var(--con-dim);font-size:12px}
+.con-head i{width:10px;height:10px;border-radius:50%;background:var(--con-line);display:inline-block}
+.con-head .rerun{margin-left:auto;background:transparent;border:1px solid var(--con-line);color:var(--con-fg);border-radius:6px;padding:3px 9px;font-family:var(--mono);font-size:12px}
+.con-body{padding:14px 16px 16px;overflow-x:auto}
+.con-cmd{color:var(--con-dim);margin-bottom:10px;white-space:nowrap}
+.con-cmd b{color:var(--con-fg);font-weight:400}
+.con-sep{color:var(--con-line);white-space:nowrap;overflow:hidden}
+.t-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:5px 0;align-items:baseline}
+.t-name{color:var(--con-fg);min-width:0}
+.t-name small{display:block;color:var(--con-dim);font-size:12px}
+.t-stat{font-weight:600;min-width:62px;text-align:center;border-radius:4px;padding:1px 6px;font-size:12px}
+.t-stat.pass{background:var(--pass);color:var(--con-bg)}
+.t-stat.run{color:var(--con-dim);border:1px dashed var(--con-dim)}
+.con-sum{margin-top:10px;color:var(--con-fg)}
+.con-sum .ok{color:var(--pass)}
+
+/* metrics */
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-block:24px 8px}
+.metric{padding:22px 18px;border-right:1px solid var(--line)}
+.metric:last-child{border-right:0}
+.metric b{display:block;font-family:var(--display);font-size:clamp(28px,3.4vw,40px);font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.metric span{display:block;margin-top:8px;color:var(--muted);font-size:14.5px;line-height:1.35}
+@media (max-width:860px){.metrics{grid-template-columns:repeat(2,1fr)}.metric{border-bottom:1px solid var(--line)}.metric:nth-child(2n){border-right:0}.metric:last-child{grid-column:1/-1;border-bottom:0}}
+
+section.block{padding-block:56px 16px;scroll-margin-top:70px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;margin-bottom:28px}
+.sec-head h2{font-size:clamp(30px,4vw,44px);font-weight:800;margin-top:8px}
+.sec-head p{margin:0;color:var(--muted);max-width:46ch}
+
+/* work cards */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card .tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.card h3{font-size:23px;font-weight:700}
+.card p{margin:0;color:var(--muted)}
+.card .result{margin-top:auto;padding-top:14px;border-top:1px dashed var(--line);display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-family:var(--mono);font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--pass-soft);color:var(--pass);font-weight:600}
+@media (max-width:900px){.cards{grid-template-columns:1fr}}
+
+/* experience */
+.job{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:18px}
+.job h3{font-size:26px}
+.job .meta{color:var(--muted);font-family:var(--mono);font-size:13.5px}
+.tl{display:flex;gap:4px;height:46px;margin-bottom:6px}
+.tl button{border:0;border-radius:6px;background:var(--accent-soft);color:var(--ink);text-align:left;padding:0 12px;font-size:13.5px;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-width:0;transition:background .2s,color .2s}
+.tl button[aria-selected="true"]{background:var(--accent);color:var(--paper)}
+.tl-axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:22px}
+.proj{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px}
+.proj-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-bottom:12px}
+.proj-head h4{font-family:var(--display);font-size:22px;margin:0}
+.proj-head span{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.proj ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.proj li{display:grid;grid-template-columns:22px 1fr;gap:8px}
+.proj li::before{content:"✓";color:var(--pass);font-weight:700}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:var(--mono);font-size:12.5px;border:1px solid var(--line);border-radius:6px;padding:3px 9px;color:var(--ink);background:var(--paper)}
+
+/* skills */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.filters button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font-size:14.5px;font-weight:600}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.filters button em{font-style:normal;font-family:var(--mono);font-size:12px;opacity:.7;margin-left:4px}
+.skill-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.sg{border-top:2px solid var(--ink);padding-top:12px;min-width:0}
+.sg h3{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.sg .tools{margin-top:0}
+
+/* edu */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.two>div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;min-width:0}
+.two h3{font-size:21px;margin:6px 0 6px}
+.two p{margin:0;color:var(--muted)}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+
+/* contact */
+.contact{background:var(--ink);color:var(--paper);border-radius:16px;padding:40px clamp(20px,4vw,48px);display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center}
+.contact h2{font-size:clamp(30px,4vw,44px)}
+.contact p{opacity:.8;margin:10px 0 0}
+.contact .rows{display:grid;gap:12px}
+.crow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid color-mix(in srgb,var(--paper) 25%,transparent);border-radius:10px;padding:12px 14px;min-width:0}
+.crow code{font-family:var(--mono);font-size:14.5px;user-select:all;word-break:break-all;flex:1;min-width:0}
+.crow a{color:var(--paper);font-family:var(--mono);font-size:14.5px;word-break:break-all;flex:1}
+.crow button{background:var(--paper);color:var(--ink);border:0;border-radius:6px;padding:5px 12px;font-weight:700;font-size:13.5px}
+@media (max-width:760px){.contact{grid-template-columns:1fr}}
+footer{padding-block:40px;color:var(--muted);font-family:var(--mono);font-size:12.5px;text-align:center}
+
+/* ===== self-test runner ===== */
+.dock{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:8px;background:var(--con-bg);color:var(--con-fg);border-radius:999px;padding:8px 8px 8px 14px;font-family:var(--mono);font-size:13px;box-shadow:0 14px 30px -14px rgba(0,0,0,.6)}
+.dock button{background:var(--pass);color:var(--con-bg);border:0;border-radius:999px;padding:6px 14px;font-family:var(--mono);font-weight:600;font-size:13px}
+.runner{position:fixed;right:16px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:41;width:min(440px,calc(100vw - 32px));max-height:min(62vh,520px);display:flex;flex-direction:column;background:var(--con-bg);color:var(--con-fg);border:1px solid var(--con-line);border-radius:14px;font-family:var(--mono);font-size:12.5px;overflow:hidden;box-shadow:0 30px 60px -24px rgba(0,0,0,.6)}
+.runner-head{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--con-line)}
+.runner-head .tab{background:transparent;border:0;color:var(--con-dim);padding:5px 10px;border-radius:6px;font-family:var(--mono);font-size:12.5px}
+.runner-head .tab[aria-selected="true"]{background:var(--con-line);color:var(--con-fg)}
+.runner-head .x{margin-left:auto;background:transparent;border:0;color:var(--con-dim);font-size:16px;padding:2px 8px}
+.runner-body{overflow:auto;padding:12px 14px;flex:1}
+.log-line{white-space:pre-wrap;word-break:break-word;padding:1px 0}
+.log-line.kw{color:var(--con-dim)}
+.log-line.pass{color:var(--pass)}
+.log-line.fail{color:var(--fail)}
+.log-line.suite{color:var(--con-fg);font-weight:600}
+.script pre{margin:0;white-space:pre;font-family:var(--mono);font-size:12.5px;line-height:1.7}
+.script .ln{display:block;padding:0 6px;border-radius:4px}
+.script .ln.hot{background:var(--con-line);color:var(--pass)}
+.script .sec{color:var(--accent)}
+.runner-foot{border-top:1px solid var(--con-line);padding:8px 14px;display:flex;justify-content:space-between;gap:8px;color:var(--con-dim)}
+.bar{height:3px;background:var(--con-line)}
+.bar i{display:block;height:100%;width:0;background:var(--pass);transition:width .3s}
+.ghost{position:fixed;left:0;top:0;z-index:60;pointer-events:none;transition:transform .55s cubic-bezier(.4,.1,.2,1);will-change:transform}
+.ghost svg{display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.ghost .lbl{position:absolute;left:20px;top:20px;background:var(--pass);color:var(--con-bg);font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.ghost.click::after{content:"";position:absolute;left:-10px;top:-10px;width:22px;height:22px;border-radius:50%;border:2px solid var(--pass);animation:ping .45s ease-out}
+@keyframes ping{from{transform:scale(.3);opacity:1}to{transform:scale(1.6);opacity:0}}
+.rf-target{outline:2px dashed var(--pass)!important;outline-offset:5px;transition:outline-color .2s}
+@media (max-width:600px){.dock .lab{display:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ghost{transition:none}*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">SC<span>.</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#work">Work</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
+    </nav>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch colour theme">◐ theme</button>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <section class="hero">
+    <div>
+      <div class="avail"><span class="status-dot"></span><span class="eyebrow">Quality Engineering Analyst · Accenture · Pune</span></div>
+      <h1>Shrutika Chendake</h1>
+      <div class="role">QA Automation Engineer — Robot Framework · Selenium · Appium · Python</div>
+      <p class="lede">I build test automation for web and iOS apps that catches defects before users do.</p>
+      <div class="cta">
+        <button class="btn run" id="heroRun" type="button">▶ Watch me test this page</button>
+        <a class="btn primary" href="#contact">Get in touch</a>
+        <a class="btn" href="#experience">Experience</a>
+      </div>
+    </div>
+    <div class="console" aria-label="Career highlights shown as a test run">
+      <div class="con-head"><i></i><i></i><i></i><span>career_highlights.robot</span><button class="rerun" id="rerun" type="button">↻ re-run</button></div>
+      <div class="con-body">
+        <div class="con-cmd">$ <b>robot --outputdir results career_highlights.robot</b></div>
+        <div class="con-sep">==============================================</div>
+        <div id="suite"></div>
+        <div class="con-sep">==============================================</div>
+        <div class="con-sum" id="suiteSum"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="metrics" id="metrics"></div>
+
+  <section class="block" id="work">
+    <div class="sec-head"><div><div class="eyebrow">Selected work</div><h2>What I've built</h2></div><p>Three pieces of work from Accenture client projects, with the measured results.</p></div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section class="block" id="experience">
+    <div class="sec-head"><div><div class="eyebrow">Experience</div><h2>Five years, three projects</h2></div><p>Pick a project on the timeline to see what I did there.</p></div>
+    <div class="job"><h3>Quality Engineering Analyst, Accenture</h3><span class="meta" id="tenure">Pune, India · Aug 2021 – Present</span></div>
+    <div class="tl" id="timeline" role="tablist" aria-label="Projects"></div>
+    <div class="tl-axis"><span>Today</span><span>2025</span><span>2023</span><span>Aug 2021</span></div>
+    <div class="proj" id="projPanel" role="tabpanel"></div>
+  </section>
+
+  <section class="block" id="skills">
+    <div class="sec-head"><div><div class="eyebrow">Skills</div><h2>Toolkit</h2></div><p>Filter by area.</p></div>
+    <div class="filters" id="filters"></div>
+    <div class="skill-groups" id="skillGroups"></div>
+  </section>
+
+  <section class="block" id="education">
+    <div class="two">
+      <div><div class="eyebrow">Education</div><h3>B.E. Computer Science</h3><p>Walchand Institute of Technology, Solapur · 2021 · CGPA 8.2/10</p></div>
+      <div><div class="eyebrow">Recognition</div><h3>Skill STAR Award &amp; ACE Award</h3><p>Accenture</p></div>
+    </div>
+  </section>
+
+  <section class="block" id="contact">
+    <div class="contact">
+      <div><h2>Need someone to automate your testing?</h2><p>I'm open to QA automation roles. Email or LinkedIn is the best way to reach me.</p></div>
+      <div class="rows">
+        <div class="crow"><code id="email">schendake97@gmail.com</code><button id="copyEmail" type="button">Copy</button></div>
+        <div class="crow"><a id="linkedin" href="https://www.linkedin.com/in/shrutika-chendake-06432a1ba" target="_blank" rel="noopener">linkedin.com/in/shrutika-chendake</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer id="foot">Kolhapur, Maharashtra · This page tests itself. Press the green button to watch.</footer>
+
+<div class="dock" id="dock"><span class="lab">portfolio_smoke.robot</span><button id="dockRun" type="button">▶ Run tests</button></div>
+
+<aside class="runner" id="runner" hidden aria-label="Automated test runner">
+  <div class="runner-head" role="tablist">
+    <button class="tab" id="tabLog" role="tab" aria-selected="true" type="button">Log</button>
+    <button class="tab" id="tabScript" role="tab" aria-selected="false" type="button">Script</button>
+    <button class="x" id="closeRunner" type="button" aria-label="Close runner">✕</button>
+  </div>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="runner-body" id="logView"></div>
+  <div class="runner-body script" id="scriptView" hidden><pre id="scriptPre"></pre></div>
+  <div class="runner-foot"><span id="runState">Idle</span><span id="runCount"></span></div>
+</aside>
+
+<div class="ghost" id="ghost" hidden>
+  <svg width="22" height="26" viewBox="0 0 22 26"><path d="M2 2 L2 21 L7 16.5 L10.5 24 L14 22.5 L10.5 15 L17.5 15 Z" fill="var(--ink)" stroke="var(--paper)" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  <span class="lbl">robot</span>
+</div>
+
+<script>
+/* ---------- Content: edit here to update the site ---------- */
+const DATA = {
+  start: [2021, 7], // Aug 2021 (month index)
+  highlights: [
+    ["Build Reusable Web And iOS Framework", "Robot Framework + Appium", "70% reuse"],
+    ["Maintain Regression Suite", "web + iOS, every release", "400+ scripts"],
+    ["Reduce Manual Testing Effort", "Solix CDP suite", "−60–70%"],
+    ["Raise Defect Detection Rate", "IQ · SIT · UAT · regression", "+45%"],
+    ["Speed Up Root Cause Analysis", "Xcode, Appium, device logs", "−50% time"],
+    ["Expand iOS Device Coverage", "real devices + simulators", "+60%"],
+    ["Migrate HP ALM To Jira + Xray", "led the migration", "done"],
+    ["Ship Without Critical Prod Defects", "sprint triage + releases", "0 critical"]
+  ],
+  metrics: [
+    {v:"years", l:"years in QA and test automation"},
+    {v:"400+", l:"regression scripts maintained"},
+    {v:"60–70%", l:"less manual testing effort"},
+    {v:"45%", l:"higher defect detection rate"},
+    {v:"30–40%", l:"faster suite execution"}
+  ],
+  work: [
+    {tag:"SMART · Web + iOS", t:"One framework for web and iOS",
+     d:"A reusable Web UI and iOS automation framework in Robot Framework and Appium. It now carries 400+ regression scripts across release and sprint cycles.",
+     r:["70% code reuse","400+ scripts"]},
+    {tag:"Solix CDP · Regression", t:"A regression suite built from scratch",
+     d:"An end-to-end Robot Framework suite with data-driven components and custom keyword libraries, tuned for stability and ready for CI/CD.",
+     r:["−60–70% manual effort","+40% coverage","−30–40% run time"]},
+    {tag:"Solix CDP · Test management", t:"HP ALM to Jira + Xray",
+     d:"I led the move of test management from HP ALM to Jira + Xray, which improved execution tracking, defect traceability and reporting.",
+     r:["100% RTM traceability","0 critical prod defects"]}
+  ],
+  projects: [
+    {id:"ent", name:"Enterprise Applications", from:[2021,7], to:[2023,0],
+     bullets:["Executed manual and automated functional, integration and regression test suites within Agile/Scrum teams.",
+              "Managed the end-to-end defect lifecycle in HP ALM and Jira, from logging and triage to retesting and closure.",
+              "Validated backend data with SQL queries on MS SQL Server to confirm application results against the database."],
+     tools:["Selenium","HP ALM","Jira","SQL","MS SQL Server","Agile/Scrum"]},
+    {id:"solix", name:"Solix CDP", from:[2023,1], to:[2024,11],
+     bullets:["Led the HP ALM to Jira + Xray migration, improving test execution tracking, defect traceability and reporting.",
+              "Built an end-to-end regression automation suite in Robot Framework, reducing manual testing effort by 60–70%.",
+              "Created data-driven components and custom Robot Framework keyword libraries, raising automation coverage by 40%+.",
+              "Improved framework stability and cut execution time by 30–40%, readying the suite for CI/CD integration.",
+              "Wrote manual and automated test cases for new features with 100% requirements traceability (RTM).",
+              "Peer-reviewed test cases and automation scripts to keep coding standards and coverage consistent.",
+              "Took part in sprint planning, grooming and defect triage, supporting releases with zero critical production defects."],
+     tools:["Robot Framework","Python","Selenium WebDriver","Jira","Xray","HP ALM","CI/CD"]},
+    {id:"smart", name:"SMART (Web + iOS)", from:[2025,0], to:null,
+     bullets:["Built a reusable Web UI and iOS automation framework with Robot Framework and Appium, achieving 70% code reuse.",
+              "Maintain 400+ regression automation scripts across release and sprint cycles, reducing post-release defects.",
+              "Design and run automated and manual test cases covering 100% of end-to-end web and iOS scenarios.",
+              "Conduct IQ, SIT, UAT, sprint and full regression testing, raising the defect detection rate by 45%.",
+              "Troubleshoot critical defects using Xcode, Appium and device logs, cutting root-cause analysis time by 50%.",
+              "Test on real iOS devices and simulators, expanding device compatibility coverage by 60%.",
+              "Work with business analysts and developers to turn requirements and acceptance criteria into test scenarios."],
+     tools:["Robot Framework","Appium","Python","Xcode","iOS Simulators","Jira","Xray"]}
+  ],
+  skills: {
+    automation:{label:"Test Automation", items:["Robot Framework","Selenium WebDriver","Appium","Python","Custom Keyword Libraries","Data-Driven Testing","Keyword-Driven Testing"]},
+    mobile:{label:"Mobile Testing", items:["iOS Testing","Xcode","iOS Simulators","Real-Device Testing","Device Log Analysis"]},
+    types:{label:"Testing Types", items:["Functional","Regression","Integration","SIT","UAT","IQ","Smoke","Sanity","Database","Manual"]},
+    mgmt:{label:"Test Management", items:["Jira","Xray","HP ALM","QE TestHub","Test Case Design","Traceability (RTM)"]},
+    devops:{label:"DevOps & Databases", items:["CI/CD","Git","SQL","MS SQL Server"]},
+    method:{label:"Methodologies", items:["Agile","Scrum","SDLC","STLC","Defect Lifecycle Management"]}
+  }
+};
+
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const now = new Date();
+const monthsBetween = (a, b) => (b[0]-a[0])*12 + (b[1]-a[1]) + 1;
+const today = [now.getFullYear(), now.getMonth()];
+const totalMonths = monthsBetween(DATA.start, today);
+const yearsText = `${Math.floor(totalMonths/12)}+`;
+
+/* ---------- hero suite ---------- */
+function renderSuite(state){
+  $("#suite").innerHTML = DATA.highlights.map(([n, s, r], i) =>
+    `<div class="t-row"><div class="t-name">${esc(n)} <small>${esc(s)} · ${esc(r)}</small></div><span class="t-stat ${state==="pass"?"pass":"run"}" data-i="${i}">${state==="pass"?"PASS":"···"}</span></div>`).join("");
+  $("#suiteSum").innerHTML = state === "pass" ? summary() : `<span>Running…</span>`;
+}
+const summary = () => `${DATA.highlights.length} tests, <span class="ok">${DATA.highlights.length} passed</span>, 0 failed`;
+let suiteRunning = false;
+async function runSuite(){
+  if (suiteRunning) return; suiteRunning = true;
+  if (reduce){ renderSuite("pass"); suiteRunning = false; return; }
+  renderSuite("run");
+  for (const el of document.querySelectorAll("#suite .t-stat")){
+    await sleep(260); el.className = "t-stat pass"; el.textContent = "PASS";
+  }
+  $("#suiteSum").innerHTML = summary(); suiteRunning = false;
+}
+
+/* ---------- metrics ---------- */
+$("#metrics").innerHTML = DATA.metrics.map(m => `<div class="metric"><b data-v="${esc(m.v==="years"?yearsText:m.v)}">${esc(m.v==="years"?yearsText:m.v)}</b><span>${esc(m.l)}</span></div>`).join("");
+function countUp(){
+  if (reduce) return;
+  document.querySelectorAll(".metric b").forEach(b => {
+    const full = b.dataset.v, nums = full.match(/\d+/g); if (!nums) return;
+    let f = 0; const steps = 28;
+    const tick = () => { f++;
+      b.textContent = full.replace(/\d+/g, n => Math.round(+n * f / steps));
+      if (f < steps) requestAnimationFrame(tick); else b.textContent = full; };
+    tick();
+  });
+}
+
+/* ---------- work ---------- */
+$("#cards").innerHTML = DATA.work.map(w => `<article class="card"><div class="tag">${esc(w.tag)}</div><h3>${esc(w.t)}</h3><p>${esc(w.d)}</p><div class="result">${w.r.map(r=>`<span class="pill">${esc(r)}</span>`).join("")}</div></article>`).join("");
+
+/* ---------- experience timeline ---------- */
+const mon = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const fmt = d => d ? `${mon[d[1]]} ${d[0]}` : "Present";
+$("#tenure").textContent = `Pune, India · Aug 2021 – Present · ${Math.floor(totalMonths/12)} yrs ${totalMonths%12} mos`;
+const newestFirst = [...DATA.projects].sort((a, b) => (b.from[0]*12 + b.from[1]) - (a.from[0]*12 + a.from[1]));
+$("#timeline").innerHTML = newestFirst.map(p => {
+  const m = monthsBetween(p.from, p.to || today);
+  return `<button role="tab" type="button" data-proj="${p.id}" aria-selected="false" style="flex:${m}" title="${esc(p.name)} · ${m} months">${esc(p.name)}</button>`;
+}).join("");
+function showProject(id){
+  const p = DATA.projects.find(x => x.id === id);
+  document.querySelectorAll("#timeline button").forEach(b => b.setAttribute("aria-selected", b.dataset.proj === id));
+  const m = monthsBetween(p.from, p.to || today);
+  $("#projPanel").innerHTML = `<div class="proj-head"><h4>Project: ${esc(p.name)}</h4><span>${fmt(p.from)} – ${fmt(p.to)} · ${m} months</span></div>
+    <ul>${p.bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>
+    <div class="tools">${p.tools.map(t=>`<span class="chip">${esc(t)}</span>`).join("")}</div>`;
+}
+$("#timeline").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showProject(b.dataset.proj); });
+showProject("smart");
+
+/* ---------- skills ---------- */
+const cats = Object.entries(DATA.skills);
+const allCount = cats.reduce((n, [,g]) => n + g.items.length, 0);
+$("#filters").innerHTML = `<button type="button" data-filter="all" aria-pressed="true">All<em>${allCount}</em></button>` +
+  cats.map(([k,g]) => `<button type="button" data-filter="${k}" aria-pressed="false">${esc(g.label)}<em>${g.items.length}</em></button>`).join("");
+$("#skillGroups").innerHTML = cats.map(([k,g]) => `<div class="sg" data-cat="${k}"><h3>${esc(g.label)}</h3><div class="tools">${g.items.map(i=>`<span class="chip skill">${esc(i)}</span>`).join("")}</div></div>`).join("");
+function filterSkills(k){
+  document.querySelectorAll("#filters button").forEach(b => b.setAttribute("aria-pressed", b.dataset.filter === k));
+  document.querySelectorAll(".sg").forEach(g => g.hidden = !(k === "all" || g.dataset.cat === k));
+}
+$("#filters").addEventListener("click", e => { const b = e.target.closest("button"); if (b) filterSkills(b.dataset.filter); });
+
+/* ---------- theme ---------- */
+const root = document.documentElement;
+const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+try { const t = localStorage.getItem("sc-theme"); if (t) root.dataset.theme = t; } catch(e){}
+$("#themeToggle").addEventListener("click", () => {
+  root.dataset.theme = isDark() ? "light" : "dark";
+  try { localStorage.setItem("sc-theme", root.dataset.theme); } catch(e){}
+});
+
+/* ---------- copy email ---------- */
+$("#copyEmail").addEventListener("click", async e => {
+  const btn = e.currentTarget, text = $("#email").textContent;
+  try { await navigator.clipboard.writeText(text); btn.textContent = "Copied"; }
+  catch(err){ const r = document.createRange(); r.selectNodeContents($("#email")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Selected"; }
+  setTimeout(() => btn.textContent = "Copy", 1600);
+});
+
+/* ================= Self-test runner ================= */
+const SCRIPT = `*** Settings ***
+Documentation    Smoke tests for Shrutika's portfolio
+Library          SeleniumLibrary-style keywords, run in the page
+
+*** Test Cases ***
+Navigation Link Opens Experience
+    Click Element                css:a[href="#experience"]
+    Element Should Be Visible    id:experience
+
+Timeline Switches Project
+    Click Element                css:[data-proj="solix"]
+    Element Should Contain       id:projPanel    Jira + Xray
+
+Skill Filter Narrows Results
+    Click Element                css:[data-filter="mobile"]
+    Visible Skill Count Should Be    5
+    Click Element                css:[data-filter="all"]
+
+Theme Toggle Switches Colours
+    Click Element                id:themeToggle
+    Theme Should Have Changed
+    Click Element                id:themeToggle
+
+Metrics Match Resume
+    Element Should Contain       id:metrics    400+
+    Element Should Contain       id:metrics    60–70%
+
+Contact Details Are Reachable
+    Element Text Should Be       id:email      schendake97@gmail.com
+    Link Should Point To         id:linkedin   linkedin.com/in/`;
+const lines = SCRIPT.split("\n");
+$("#scriptPre").innerHTML = lines.map((l,i) => `<span class="ln" data-ln="${i}">${l.startsWith("***") ? `<span class="sec">${esc(l)}</span>` : esc(l) || " "}</span>`).join("");
+const lineOf = needle => lines.findIndex(l => l.includes(needle));
+
+const ghost = $("#ghost");
+let gx = innerWidth - 60, gy = innerHeight - 60, running = false, stopReq = false;
+function log(text, cls=""){ const d = document.createElement("div"); d.className = "log-line " + cls; d.textContent = text; $("#logView").append(d); $("#logView").scrollTop = 1e6; }
+function hot(needle){ document.querySelectorAll(".script .ln.hot").forEach(x=>x.classList.remove("hot")); const i = lineOf(needle); if (i>=0){ const el = document.querySelector(`.ln[data-ln="${i}"]`); el.classList.add("hot"); el.scrollIntoView({block:"nearest"}); } }
+function moveGhost(x, y){ gx = x; gy = y; ghost.style.transform = `translate(${x}px, ${y}px)`; }
+
+async function clickEl(sel, label){
+  const el = $(sel); if (!el) throw new Error(`Element '${sel}' not found`);
+  hot(sel); log(`  Click Element    ${sel}`, "kw");
+  el.scrollIntoView({block:"center", behavior: reduce ? "auto" : "smooth"});
+  await sleep(reduce ? 50 : 520);
+  const r = el.getBoundingClientRect();
+  moveGhost(r.left + Math.min(r.width/2, 40), r.top + r.height/2);
+  el.classList.add("rf-target");
+  await sleep(reduce ? 50 : 600);
+  ghost.classList.remove("click"); void ghost.offsetWidth; ghost.classList.add("click");
+  el.click();
+  await sleep(reduce ? 50 : 350);
+  el.classList.remove("rf-target");
+}
+function check(cond, msg, needle){ if (needle) hot(needle); if (!cond) throw new Error(msg); log(`  ✓ ${msg}`, "kw"); }
+
+const TESTS = [
+  ["Navigation Link Opens Experience", async () => {
+    await clickEl('a[href="#experience"]');
+    await sleep(reduce ? 50 : 500);
+    const r = $("#experience").getBoundingClientRect();
+    check(r.top < innerHeight && r.bottom > 0, "Element id:experience is visible", "Element Should Be Visible");
+  }],
+  ["Timeline Switches Project", async () => {
+    await clickEl('[data-proj="solix"]');
+    check($("#projPanel").textContent.includes("Jira + Xray"), "Panel contains 'Jira + Xray'", "id:projPanel");
+  }],
+  ["Skill Filter Narrows Results", async () => {
+    await clickEl('[data-filter="mobile"]');
+    const n = [...document.querySelectorAll(".sg:not([hidden]) .skill")].length;
+    check(n === 5, `Visible skill count is ${n} (expected 5)`, "Visible Skill Count");
+    await sleep(reduce ? 50 : 400);
+    await clickEl('[data-filter="all"]');
+  }],
+  ["Theme Toggle Switches Colours", async () => {
+    const before = isDark(), bg = getComputedStyle(document.body).backgroundColor;
+    await clickEl("#themeToggle");
+    await sleep(350);
+    check(isDark() !== before && getComputedStyle(document.body).backgroundColor !== bg, `Theme changed to ${isDark() ? "dark" : "light"}`, "Theme Should Have Changed");
+    await sleep(reduce ? 50 : 500);
+    await clickEl("#themeToggle");
+  }],
+  ["Metrics Match Resume", async () => {
+    $("#metrics").scrollIntoView({block:"center", behavior: reduce ? "auto" : "smooth"});
+    await sleep(reduce ? 50 : 500);
+    const t = $("#metrics").textContent;
+    check(t.includes("400+"), "Metrics contain '400+'", "400+");
+    check(t.includes("60–70%"), "Metrics contain '60–70%'", "60–70%");
+  }],
+  ["Contact Details Are Reachable", async () => {
+    $("#contact").scrollIntoView({block:"center", behavior: reduce ? "auto" : "smooth"});
+    await sleep(reduce ? 50 : 600);
+    const r = $("#email").getBoundingClientRect(); moveGhost(r.left + 30, r.top + r.height/2);
+    await sleep(reduce ? 50 : 500);
+    check($("#email").textContent.trim() === "schendake97@gmail.com", "Email text is correct", "Element Text Should Be");
+    check($("#linkedin").href.includes("linkedin.com/in/"), "LinkedIn link points to linkedin.com/in/", "Link Should Point To");
+  }]
+];
+
+async function runTests(){
+  if (running) return;
+  running = true; stopReq = false;
+  const startTheme = root.dataset.theme;
+  $("#runner").hidden = false; $("#logView").innerHTML = ""; $("#bar").style.width = "0";
+  $("#dockRun").textContent = "■ Stop";
+  ghost.hidden = false; moveGhost(gx, gy);
+  $("#runState").textContent = "Running"; let pass = 0, fail = 0;
+  log("==============================================================", "kw");
+  log("Portfolio Smoke :: in-page Robot Framework style run", "suite");
+  log("==============================================================", "kw");
+  for (let i = 0; i < TESTS.length; i++){
+    if (stopReq) { log("Run stopped by user.", "fail"); break; }
+    const [name, fn] = TESTS[i];
+    log(name, "suite"); hot(name);
+    try { await fn(); pass++; log(`${name.padEnd(36).slice(0,36)} | PASS |`, "pass"); }
+    catch(e){ fail++; log(`${name.padEnd(36).slice(0,36)} | FAIL |`, "fail"); log("  " + e.message, "fail"); }
+    $("#bar").style.width = `${(i+1)/TESTS.length*100}%`;
+    $("#runCount").textContent = `${pass} passed · ${fail} failed`;
+  }
+  log("==============================================================", "kw");
+  log(`${pass+fail} tests, ${pass} passed, ${fail} failed`, fail ? "fail" : "pass");
+  if (startTheme) root.dataset.theme = startTheme; else delete root.dataset.theme;
+  try { startTheme ? localStorage.setItem("sc-theme", startTheme) : localStorage.removeItem("sc-theme"); } catch(e){}
+  document.querySelectorAll(".script .ln.hot").forEach(x=>x.classList.remove("hot"));
+  $("#runState").textContent = fail ? "Finished with failures" : "All tests passed";
+  $("#dockRun").textContent = "▶ Run again";
+  ghost.hidden = true; running = false;
+}
+
+$("#dockRun").addEventListener("click", () => running ? (stopReq = true) : runTests());
+$("#heroRun").addEventListener("click", runTests);
+$("#rerun").addEventListener("click", runSuite);
+$("#closeRunner").addEventListener("click", () => { stopReq = true; $("#runner").hidden = true; });
+function setTab(log){ $("#tabLog").setAttribute("aria-selected", log); $("#tabScript").setAttribute("aria-selected", !log); $("#logView").hidden = !log; $("#scriptView").hidden = log; }
+$("#tabLog").addEventListener("click", () => setTab(true));
+$("#tabScript").addEventListener("click", () => setTab(false));
+
+renderSuite("pass");
+$("#foot").textContent = `Kolhapur, Maharashtra · Updated ${mon[today[1]]} ${today[0]} · This page tests itself. Press ▶ Run tests to watch.`;
+requestAnimationFrame(() => { runSuite(); countUp(); });
+</script>
+</body>
+</html>
