@@ -154,7 +154,9 @@ section.block{padding-block:56px 16px;scroll-margin-top:70px}
 .crow a{color:var(--paper);font-family:var(--mono);font-size:14.5px;word-break:break-all;flex:1}
 .crow button{background:var(--paper);color:var(--ink);border:0;border-radius:6px;padding:5px 12px;font-weight:700;font-size:13.5px}
 @media (max-width:760px){.contact{grid-template-columns:1fr}}
-footer{padding-block:40px;color:var(--muted);font-family:var(--mono);font-size:12.5px;text-align:center}
+footer{padding-block:40px 96px;color:var(--muted);font-family:var(--mono);font-size:12.5px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding-inline:20px}
+.visits{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;color:var(--muted)}
+.visits b{color:var(--ink);font-variant-numeric:tabular-nums;font-size:14px}
 
 /* ===== self-test runner ===== */
 .dock{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:8px;background:var(--con-bg);color:var(--con-fg);border-radius:999px;padding:8px 8px 8px 14px;font-family:var(--mono);font-size:13px;box-shadow:0 14px 30px -14px rgba(0,0,0,.6)}
@@ -262,7 +264,10 @@ footer{padding-block:40px;color:var(--muted);font-family:var(--mono);font-size:1
     </div>
   </section>
 </main>
-<footer id="foot">Kolhapur, Maharashtra · This page tests itself. Press the green button to watch.</footer>
+<footer>
+  <span id="foot">Kolhapur, Maharashtra · This page tests itself. Press the green button to watch.</span>
+  <span class="visits" id="visits" hidden><span class="status-dot"></span><b id="visitCount">0</b> visitors so far</span>
+</footer>
 
 <div class="dock" id="dock"><span class="lab">portfolio_smoke.robot</span><button id="dockRun" type="button">▶ Run tests</button></div>
 
@@ -452,7 +457,7 @@ Library          SeleniumLibrary-style keywords, run in the page
 *** Test Cases ***
 Navigation Link Opens Experience
     Click Element                css:a[href="#experience"]
-    Element Should Be Visible    id:experience
+    Wait Until Element Is Visible    id:experience    timeout=3s
 
 Timeline Switches Project
     Click Element                css:[data-proj="solix"]
@@ -503,10 +508,16 @@ function check(cond, msg, needle){ if (needle) hot(needle); if (!cond) throw new
 
 const TESTS = [
   ["Navigation Link Opens Experience", async () => {
-    await clickEl('a[href="#experience"]');
-    await sleep(reduce ? 50 : 500);
-    const r = $("#experience").getBoundingClientRect();
-    check(r.top < innerHeight && r.bottom > 0, "Element id:experience is visible", "Element Should Be Visible");
+    // The header nav is hidden on phones, so use the hero link there
+    const navShown = $(".nav").offsetParent !== null;
+    await clickEl(navShown ? '.nav a[href="#experience"]' : '.cta a[href="#experience"]');
+    let visible = false;
+    for (let t = 0; t < 30 && !visible; t++){
+      const r = $("#experience").getBoundingClientRect();
+      visible = r.top < innerHeight * 0.5 && r.bottom > 0;
+      if (!visible) await sleep(100);
+    }
+    check(visible, "Element id:experience is visible", "Wait Until Element Is Visible");
   }],
   ["Timeline Switches Project", async () => {
     await clickEl('[data-proj="solix"]');
@@ -520,10 +531,11 @@ const TESTS = [
     await clickEl('[data-filter="all"]');
   }],
   ["Theme Toggle Switches Colours", async () => {
-    const before = isDark(), bg = getComputedStyle(document.body).backgroundColor;
+    const paper = () => getComputedStyle(root).getPropertyValue("--paper").trim();
+    const before = isDark(), bg = paper();
     await clickEl("#themeToggle");
     await sleep(350);
-    check(isDark() !== before && getComputedStyle(document.body).backgroundColor !== bg, `Theme changed to ${isDark() ? "dark" : "light"}`, "Theme Should Have Changed");
+    check(isDark() !== before && paper() !== bg, `Theme changed to ${isDark() ? "dark" : "light"}`, "Theme Should Have Changed");
     await sleep(reduce ? 50 : 500);
     await clickEl("#themeToggle");
   }],
@@ -585,6 +597,23 @@ $("#tabScript").addEventListener("click", () => setTab(false));
 renderSuite("pass");
 $("#foot").textContent = `Kolhapur, Maharashtra · Updated ${mon[today[1]]} ${today[0]} · This page tests itself. Press ▶ Run tests to watch.`;
 requestAnimationFrame(() => { runSuite(); countUp(); });
+
+/* ---------- visitor count (abacus.jasoncameron.dev, no account needed) ---------- */
+(async () => {
+  const base = "https://abacus.jasoncameron.dev";
+  let seen = false;
+  try { seen = sessionStorage.getItem("sc-counted") === "1"; } catch(e){}
+  try {
+    // Count each browser session once; reloads only read the total
+    const res = await fetch(`${base}/${seen ? "get" : "hit"}/shrutika-c-portfolio/visits`);
+    if (!res.ok) return;
+    const { value } = await res.json();
+    if (typeof value !== "number") return;
+    try { sessionStorage.setItem("sc-counted", "1"); } catch(e){}
+    $("#visitCount").textContent = value.toLocaleString("en-IN");
+    $("#visits").hidden = false;
+  } catch(e){ /* counter unavailable: leave it hidden */ }
+})();
 </script>
 </body>
 </html>
