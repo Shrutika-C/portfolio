@@ -50,7 +50,8 @@ button{font:inherit;cursor:pointer}
 .nav{display:flex;gap:18px}
 .nav a{color:var(--muted);text-decoration:none;font-weight:600;font-size:15px}
 .nav a:hover{color:var(--ink)}
-.icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:14px;font-family:var(--mono)}
+.icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:14px;font-family:var(--mono);text-decoration:none;white-space:nowrap}
+.icon-btn.cv{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 @media (max-width:720px){.nav{display:none}}
 
 /* hero */
@@ -152,7 +153,8 @@ section.block{padding-block:56px 16px;scroll-margin-top:70px}
 .crow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid color-mix(in srgb,var(--paper) 25%,transparent);border-radius:10px;padding:12px 14px;min-width:0}
 .crow code{font-family:var(--mono);font-size:14.5px;user-select:all;word-break:break-all;flex:1;min-width:0}
 .crow a{color:var(--paper);font-family:var(--mono);font-size:14.5px;word-break:break-all;flex:1}
-.crow button{background:var(--paper);color:var(--ink);border:0;border-radius:6px;padding:5px 12px;font-weight:700;font-size:13.5px}
+.crow button,.crow a.dl{background:var(--paper);color:var(--ink);border:0;border-radius:6px;padding:5px 12px;font-weight:700;font-size:13.5px}
+.crow a.dl{flex:0 0 auto;font-family:var(--body);text-decoration:none;word-break:normal}
 @media (max-width:760px){.contact{grid-template-columns:1fr}}
 footer{padding-block:40px 96px;color:var(--muted);font-family:var(--mono);font-size:12.5px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding-inline:20px}
 .visits{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;color:var(--muted)}
@@ -197,6 +199,7 @@ footer{padding-block:40px 96px;color:var(--muted);font-family:var(--mono);font-s
     <nav class="nav" aria-label="Sections">
       <a href="#work">Work</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
     </nav>
+    <a class="icon-btn cv" href="Shrutika_Chendake_Resume.pdf" download="Shrutika_Chendake_Resume.pdf">↓ Resume</a>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch colour theme">◐ theme</button>
   </div>
 </header>
@@ -211,6 +214,7 @@ footer{padding-block:40px 96px;color:var(--muted);font-family:var(--mono);font-s
       <div class="cta">
         <button class="btn run" id="heroRun" type="button">▶ Watch me test this page</button>
         <a class="btn primary" href="#contact">Get in touch</a>
+        <a class="btn" href="Shrutika_Chendake_Resume.pdf" download="Shrutika_Chendake_Resume.pdf">↓ Download resume</a>
         <a class="btn" href="#experience">Experience</a>
       </div>
     </div>
@@ -260,6 +264,7 @@ footer{padding-block:40px 96px;color:var(--muted);font-family:var(--mono);font-s
       <div class="rows">
         <div class="crow"><code id="email">schendake97@gmail.com</code><button id="copyEmail" type="button">Copy</button></div>
         <div class="crow"><a id="linkedin" href="https://www.linkedin.com/in/shrutika-chendake-06432a1ba" target="_blank" rel="noopener">linkedin.com/in/shrutika-chendake</a></div>
+        <div class="crow"><a id="resumeLink" href="Shrutika_Chendake_Resume.pdf" target="_blank" rel="noopener">Resume (PDF, 1 page)</a><a class="dl" href="Shrutika_Chendake_Resume.pdf" download="Shrutika_Chendake_Resume.pdf">Download</a></div>
       </div>
     </div>
   </section>
@@ -432,6 +437,15 @@ function filterSkills(k){
 }
 $("#filters").addEventListener("click", e => { const b = e.target.closest("button"); if (b) filterSkills(b.dataset.filter); });
 
+/* ---------- section links: scroll explicitly so repeat clicks on the same #hash still move ---------- */
+document.addEventListener("click", e => {
+  const a = e.target.closest('a[href^="#"]'); if (!a) return;
+  const target = document.getElementById(a.getAttribute("href").slice(1)); if (!target) return;
+  e.preventDefault();
+  target.scrollIntoView({block:"start", behavior: reduce ? "auto" : "smooth"});
+  history.replaceState(null, "", a.getAttribute("href"));
+});
+
 /* ---------- theme ---------- */
 const root = document.documentElement;
 const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
@@ -457,7 +471,7 @@ Library          SeleniumLibrary-style keywords, run in the page
 *** Test Cases ***
 Navigation Link Opens Experience
     Click Element                css:a[href="#experience"]
-    Wait Until Element Is Visible    id:experience    timeout=3s
+    Wait Until Element Is Visible    id:experience    timeout=5s
 
 Timeline Switches Project
     Click Element                css:[data-proj="solix"]
@@ -479,7 +493,12 @@ Metrics Match Resume
 
 Contact Details Are Reachable
     Element Text Should Be       id:email      schendake97@gmail.com
-    Link Should Point To         id:linkedin   linkedin.com/in/`;
+    Link Should Point To         id:linkedin   linkedin.com/in/
+
+Resume PDF Is Downloadable
+    Element Should Be Visible    id:resumeLink
+    Status Should Be             200    GET    Shrutika_Chendake_Resume.pdf
+    Content Type Should Be       application/pdf`;
 const lines = SCRIPT.split("\n");
 $("#scriptPre").innerHTML = lines.map((l,i) => `<span class="ln" data-ln="${i}">${l.startsWith("***") ? `<span class="sec">${esc(l)}</span>` : esc(l) || " "}</span>`).join("");
 const lineOf = needle => lines.findIndex(l => l.includes(needle));
@@ -493,8 +512,11 @@ function moveGhost(x, y){ gx = x; gy = y; ghost.style.transform = `translate(${x
 async function clickEl(sel, label){
   const el = $(sel); if (!el) throw new Error(`Element '${sel}' not found`);
   hot(sel); log(`  Click Element    ${sel}`, "kw");
-  el.scrollIntoView({block:"center", behavior: reduce ? "auto" : "smooth"});
-  await sleep(reduce ? 50 : 520);
+  // The sticky header is always on screen; scrolling to it would fight the click's own scroll
+  if (!el.closest(".top")){
+    el.scrollIntoView({block:"center", behavior: reduce ? "auto" : "smooth"});
+    await sleep(reduce ? 50 : 520);
+  }
   const r = el.getBoundingClientRect();
   moveGhost(r.left + Math.min(r.width/2, 40), r.top + r.height/2);
   el.classList.add("rf-target");
@@ -512,7 +534,7 @@ const TESTS = [
     const navShown = $(".nav").offsetParent !== null;
     await clickEl(navShown ? '.nav a[href="#experience"]' : '.cta a[href="#experience"]');
     let visible = false;
-    for (let t = 0; t < 30 && !visible; t++){
+    for (let t = 0; t < 50 && !visible; t++){
       const r = $("#experience").getBoundingClientRect();
       visible = r.top < innerHeight * 0.5 && r.bottom > 0;
       if (!visible) await sleep(100);
@@ -553,6 +575,19 @@ const TESTS = [
     await sleep(reduce ? 50 : 500);
     check($("#email").textContent.trim() === "schendake97@gmail.com", "Email text is correct", "Element Text Should Be");
     check($("#linkedin").href.includes("linkedin.com/in/"), "LinkedIn link points to linkedin.com/in/", "Link Should Point To");
+  }],
+  ["Resume PDF Is Downloadable", async () => {
+    // Points at the link and requests the file, without clicking (a click would download it)
+    const a = $("#resumeLink"), r = a.getBoundingClientRect();
+    moveGhost(r.left + 30, r.top + r.height/2); a.classList.add("rf-target");
+    await sleep(reduce ? 50 : 600);
+    a.classList.remove("rf-target");
+    check(r.width > 0, "Element id:resumeLink is visible", "id:resumeLink");
+    log(`  GET    ${a.getAttribute("href")}`, "kw");
+    const res = await fetch(a.getAttribute("href"), {cache: "no-store"});
+    check(res.status === 200, `Status is ${res.status} (expected 200)`, "Status Should Be");
+    const type = res.headers.get("content-type") || "";
+    check(type.includes("pdf"), `Content-Type is ${type || "missing"}`, "Content Type Should Be");
   }]
 ];
 
